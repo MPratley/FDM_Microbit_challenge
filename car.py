@@ -1,5 +1,6 @@
 from microbit import *
 import radio
+import neopixel
 
 leftWheelPWM = pin0
 rightWheelPWM = pin1
@@ -7,30 +8,31 @@ rightWheelPWM = pin1
 leftWheelDirection = pin8
 rightWheelDirection = pin12
 
-def forwards():
-    rightWheelDirection.write_digital(0)
-    leftWheelDirection.write_digital(0)
-    
-def backwards():
-    rightWheelDirection.write_digital(1)
-    leftWheelDirection.write_digital(1)
-    
-def turn_left():
-    leftWheelPWM.write_analog(255)
-    rightWheelPWM.write_analog(120)
-    
-def turn_right():
-    leftWheelPWM.write_analog(120)
-    rightWheelPWM.write_analog(255)
-
-def 
-
 radio.on()
-radio.config(group=45)
+radio.config(group=46)
+
+def beep():
+    pin14.write_analog(120)
+    sleep(200)
+    pin14.write_analog(0)
+    sleep(200)
+    pin14.write_analog(120)
+    sleep(200)
+    pin14.write_analog(0)
+    sleep(200)
+    pin14.write_analog(200)
+    sleep(400)
+    pin14.write_analog(0)
+    
+beep()
 
 while True:
     incoming_msg = radio.receive()
     if incoming_msg:
-        leftWheelPWM.write_analog(incoming_msg[0])
-        rightWheelPWM.write_analog(incoming_msg[1])
+        incoming_msg = str(incoming_msg)
+        print(incoming_msg)
+        print(incoming_msg.split(","))
+        speedArray = list(map(int, incoming_msg.split(",")))
+        leftWheelPWM.write_analog(speedArray[0])
+        rightWheelPWM.write_analog(speedArray[1])
     
