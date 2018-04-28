@@ -1,34 +1,44 @@
 from microbit import *
 import radio
 
+# Turns on radio
 radio.on()
 radio.config(group=46)
 
+#initialise variable
 toSend = ""
+last = ""
+
 speed = 0
 direction = "straight"
 
 while True:
-    if accelerometer.get_x() < -200:
+    direction = "straight"
+    speed = 0
+    
+    if accelerometer.get_x() < -400:
         direction = "left"
         
         
-    if accelerometer.get_x() > 200:
+    if accelerometer.get_x() > 400:
         direction = "right"
      
-    if button_a.was_pressed():      
-        speed = 255
+    if button_a.is_pressed():      
+        speed = 600
     
-    if button_b.was_pressed():
-        speed = 0
+
+       
     
     if direction == "left":
-        toSend = str(0) + ',' + str(speed)
-    
-    if direction == "right":
-        toSend = str(speed) + ',' + str(0)
+        toSend = str(int(speed / 5)) + ',' + str(speed)
+    elif direction == "right":
+        toSend = str(speed) + ',' + str(int(speed / 5))
+    else: 
+        toSend = str(speed) + ',' + str(speed)
         
-    radio.send("100,100")
+    if toSend != last:    
+        radio.send(toSend)
+        last = toSend
+        sleep(50)
     
-    speed = 0
-    direction = "straight"
+
